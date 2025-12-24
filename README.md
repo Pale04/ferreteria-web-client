@@ -1,0 +1,38 @@
+# ferreteria-web-client
+
+Web client for a "ferreteria" management system built with Vue 3 and Vite.
+
+
+## Project Setup
+
+```sh
+npm install
+```
+
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
+```
+
+### Compile and Minify for Production
+
+```sh
+npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
+
+## Project Structure
+- `src/`: Main source code directory
+  - `assets/`: Static assets like images and styles
+  - `components/`: Vue components
+  - `pages/`: Different views/pages of the application
+  - `repositories/`: composables for API interactions
+  - `stores/`: Pinia stores for state management
+  - `main.js`: Entry point of the application
+  - `router.js`: Application routing configuration
