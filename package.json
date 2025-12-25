@@ -13,8 +13,11 @@
     "lint": "eslint . --fix --cache"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.18",
     "pinia": "^3.0.4",
-    "vue": "^3.5.25"
+    "tailwindcss": "^4.1.18",
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
