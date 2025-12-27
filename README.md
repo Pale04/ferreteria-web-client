@@ -30,9 +30,9 @@ npm run lint
 ## Project Structure
 - `src/`: Main source code directory
   - `assets/`: Static assets like images and styles
-  - `components/`: Vue components
-  - `pages/`: Different views/pages of the application
-  - `repositories/`: composables for API interactions
-  - `stores/`: Pinia stores for state management
+  - `components/`: reusable components
+  - `pages/`: views/pages of the application
+  - `repositories/`: modules and functions for API interactions
+  - `stores/`: Pinia stores for application state management
   - `main.js`: Entry point of the application
-  - `router.js`: Application routing configuration
+  - `router.js`: routing configuration

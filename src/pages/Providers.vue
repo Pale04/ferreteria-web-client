@@ -1,6 +1,6 @@
 <script setup>
-  import AppTable from '@/components/AppTable.vue';
-  import DataRowAppTable from '@/components/DataRowAppTable.vue';
+  import AppTable from '@/components/Table/AppTable.vue';
+  import DataRowAppTable from '@/components/Table/DataRowAppTable.vue';
   import AppLinkButton from '@/components/AppLinkButton.vue';
   import { reactive } from 'vue';
 
