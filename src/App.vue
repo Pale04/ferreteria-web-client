@@ -1,13 +1,9 @@
 <script setup>
-  //example of accessing to a global state
-  import { useSessionStore } from '@/stores/session';
-  const session = useSessionStore()
-
-  import index from './pages/providers/index.vue';
+  import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <index/>
+  <RouterView />
 </template>
 
 <style scoped></style>
