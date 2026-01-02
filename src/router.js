@@ -1,51 +1,39 @@
-import { createRouter, createWebHistory } from "vue-router";
-import { useSessionStore } from '@/stores/session';
-import Login from '@/pages/Login.vue'
-import AppLayout from "@/components/Layout/AppLayout.vue";
-import Providers from "@/pages/Providers.vue";
-import Pos from "@/pages/Pos.vue";
-import Stock from "@/pages/Stock.vue";
-import Users from "@/pages/Users.vue";
+import { useSessionStore } from '@/stores/session'
+import { createRouter, createWebHistory } from 'vue-router'
+import Login from '@/pages/login/index.vue'
+import Employees from '@/pages/employees/index.vue'
+
+const routes = [
+  { path: '/', redirect: '/login' },
+  { path: '/login', name: 'login', component: Login },
+  { 
+    path: '/employees', 
+    component: Employees,
+    meta: { requiresAdmin: true }
+  },
+]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/',
-      name: 'home',
-      component: AppLayout,
-      children: [
-        {
-          path: 'providers',
-          component: Providers
-        },
-        {
-          path: 'pos',
-          component:Pos
-        },
-        {
-          path: 'stock',
-          component: Stock
-        },
-        {
-          path: 'users',
-          component: Users
-        }
-      ]
-    }
-  ],
+  history: createWebHistory(),
+  routes
 })
 
-router.beforeEach((to) => {
+router.beforeEach((to, from, next) => {
   const session = useSessionStore()
-  if (!session.isLoggedIn && to.name !== 'login') {
-    return { name: 'login'}
+  
+  if (to.meta.requiresAdmin && !session.isAdmin) {
+    if (session.isLoggedIn) {
+      next('/pos') 
+    } else {
+      next('/login')
+    }
+  } 
+  else if (to.path !== '/login' && !session.isLoggedIn) {
+    next('/login')
+  }
+  else {
+    next()
   }
 })
 
-export default router;
+export default router
