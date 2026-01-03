@@ -27,7 +27,7 @@ async function handleLogin() {
     if(session.isAdmin){
       router.push({ path: '/pos'})
     } else {
-      router.push('/products')
+      router.push('/stock')
     }
   } catch (error) {
     errorMessage.value = error.response?.data || "Ocurrió un error inesperado. Por favor intente más tarde."
