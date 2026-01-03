@@ -1,7 +1,7 @@
 <template>
-  <button 
-    :type="type" 
-    class="app-button" 
+  <button
+    :type="type"
+    class="app-button"
     :disabled="disabled"
   >
     <slot />

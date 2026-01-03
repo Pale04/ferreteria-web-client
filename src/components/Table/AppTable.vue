@@ -1,5 +1,5 @@
 <script setup>
-  import AppButton from '@/components/AppButton.vue';
+  import Button from '@/components/Button.vue';
 
   defineProps({
     title: String,
@@ -23,11 +23,10 @@
               <p class="text-gray-500 mt-1">{{ description }}</p>
             </div>
             <div class="mt-4 md:mt-0">
-              <AppButton text="Agregar" :on-click="onAdd" color-class="bg-indigo-600 hover:bg-indigo-700 text-white"/>
+              <Button text="Agregar" :on-click="onAdd" buttonClass="bg-indigo-600 hover:bg-indigo-700 text-white"/>
             </div>
           </div>
         </div>
-
 
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">

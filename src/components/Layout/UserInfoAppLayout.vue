@@ -9,8 +9,8 @@
       <div class="flex items-center space-x-3">
         <img src="https://cdn-icons-png.flaticon.com/512/17003/17003310.png" alt="Admin" class="w-10 h-10 rounded-full">
         <div>
-          <p class="text-white text-sm font-medium">{{ session.username }}</p>
-          <p class="text-gray-400 text-xs">{{ session.getRol() }}</p>
+          <p class="text-white text-sm font-medium">{{ session.user.name }}</p>
+          <p class="text-gray-400 text-xs">{{ session.isAdmin ? 'Administrador' : 'Employee' }}</p>
         </div>
       </div>
     </div>

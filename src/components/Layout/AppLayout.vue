@@ -4,7 +4,7 @@
   import HeaderAppLayout from '@/components/Layout/HeaderAppLayout.vue'
   import UserInfoAppLayout from '@/components/Layout/UserInfoAppLayout.vue';
   import TabAppLayout from '@/components/Layout/TabAppLayout.vue';
-  import AppButton from '@/components/AppButton.vue';
+  import Button from '@/components/Button.vue';
 
   const session = useSessionStore()
 
@@ -28,12 +28,12 @@
         <TabAppLayout title="Punto de venta" route="/pos" icon-class="pi pi-shopping-cart"/>
         <TabAppLayout title="Proveedores" route="/providers" icon-class="pi pi-file-check"/>
         <TabAppLayout title="Inventario" route="/stock" icon-class="pi pi-warehouse"/>
-        <TabAppLayout title="Usuarios" route="/users" icon-class="pi pi-user"/>
+        <TabAppLayout title="Empleados" route="/employees" icon-class="pi pi-user"/>
       </div>
     </nav>
 
     <div class="absolute bottom-4 px-4">
-      <AppButton text="Cerrar sesión" :on-click="logOut" icon-class="pi pi-sign-out" color-class="bg-red-600 hover:bg-red-700 text-white"/>
+      <Button text="Cerrar sesión" :on-click="logOut" icon-class="pi pi-sign-out" buttonClass="bg-red-600 hover:bg-red-700 text-white"/>
     </div>
 
   </div>
