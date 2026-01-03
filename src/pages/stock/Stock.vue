@@ -2,15 +2,31 @@
 import { ref, onMounted } from 'vue'
 import AppTable from '@/components/Table/AppTable.vue'
 import RegisterCategoryModal from '@/components/Categories/RegisterCategoryModal.vue'
+import RegisterProductModal from '@/components/Products/RegisterProductModal.vue'
 import { getActiveCategories } from '@/repositories/CategoryRepository'
-import { registerCategory } from '@/repositories/CategoryRepository'
 
-const showRegisterModal = ref(false)
 const categories = ref([])
 const loading = ref(false)
 
-function openRegister() {
-  showRegisterModal.value = true
+const showRegisterCategoryModal = ref(false)
+const showRegisterProductModal = ref(false)
+
+function openRegisterProduct() {
+  showRegisterProductModal.value = true
+}
+
+function openRegisterCategory() {
+  showRegisterCategoryModal.value = true
+}
+
+function onProductRegistered() {
+  showRegisterProductModal.value = false
+  loadCategories()
+}
+
+function onCategoryRegistered() {
+  showRegisterCategoryModal.value = false
+  loadCategories()
 }
 
 async function loadCategories() {
@@ -22,21 +38,25 @@ async function loadCategories() {
   }
 }
 
-
-function onSuccess() {
-  showRegisterModal.value = false
-  loadCategories()
-}
-
 onMounted(loadCategories)
 </script>
 
 <template>
+  <!-- Botón secundario -->
+  <div class="flex justify-end mb-4">
+    <button
+      class="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200"
+      @click="openRegisterCategory"
+    >
+      Registrar categoría
+    </button>
+  </div>
+
   <AppTable
-    title="Categorías"
-    description="Gestión de categorías de productos"
+    title="Inventario"
+    description="Gestión de categorías y productos"
     :headers="['Nombre', 'Descripción', 'Productos']"
-    :on-add="openRegister"
+    :on-add="openRegisterProduct"
   >
     <template #default>
       <tr v-for="category in categories" :key="category.id">
@@ -64,9 +84,15 @@ onMounted(loadCategories)
     </template>
   </AppTable>
 
+  <RegisterProductModal
+    v-if="showRegisterProductModal"
+    @close="showRegisterProductModal = false"
+    @success="onProductRegistered"
+  />
+
   <RegisterCategoryModal
-    v-if="showRegisterModal"
-    @close="showRegisterModal = false"
-    @success="onSuccess"
+    v-if="showRegisterCategoryModal"
+    @close="showRegisterCategoryModal = false"
+    @success="onCategoryRegistered"
   />
 </template>
