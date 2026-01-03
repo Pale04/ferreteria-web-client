@@ -1,8 +1,10 @@
 import axios from 'axios';
 
+const url = 'http://localhost:5000/api/provider'
+
 export async function addProvider(provider) {
   try {
-    const response = await axios.post('http://localhost:5000/api/provider', provider, {
+    const response = await axios.post(url, provider, {
       headers: {
         'Content-Type': 'application/json'
       }
@@ -21,10 +23,9 @@ export async function addProvider(provider) {
         };
     }
   } catch (error) {
-    console.log(error)
     return {
       success: false,
-      msg: 'Algo inesperado sucedió. Inténtelo más tarde'
+      msg: error.response.data.msg
     }
   }
 }
