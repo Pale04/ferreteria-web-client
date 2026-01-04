@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import AppTable from '@/components/Table/AppTable.vue'
 import RegisterCategoryModal from '@/components/Categories/RegisterCategoryModal.vue'
 import RegisterProductModal from '@/components/Products/RegisterProductModal.vue'
@@ -10,6 +10,20 @@ const loading = ref(false)
 
 const showRegisterCategoryModal = ref(false)
 const showRegisterProductModal = ref(false)
+
+const searchTerm = ref('')
+
+const filteredCategories = computed(() => {
+  if (!searchTerm.value.trim()) {
+    return categories.value
+  }
+
+  const term = searchTerm.value.toLowerCase()
+
+  return categories.value.filter(category =>
+    category.name.toLowerCase().includes(term)
+  )
+})
 
 function openRegisterProduct() {
   showRegisterProductModal.value = true
@@ -42,11 +56,17 @@ onMounted(loadCategories)
 </script>
 
 <template>
-  <!-- Acciones superiores -->
-  <div class="flex justify-between items-center mb-4">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
     <h1 class="text-xl font-semibold">Inventario</h1>
 
     <div class="flex gap-2">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="Buscar categoría..."
+        class="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
       <button
         class="btn-secondary"
         @click="openRegisterCategory"
@@ -55,7 +75,6 @@ onMounted(loadCategories)
       </button>
     </div>
   </div>
-
   <AppTable
     title="Categorías"
     description="Gestión de categorías de productos"
@@ -63,7 +82,7 @@ onMounted(loadCategories)
     :on-add="openRegisterProduct"
   >
     <template #default>
-      <tr v-for="category in categories" :key="category.id">
+      <tr v-for="category in filteredCategories" :key="category.id">
         <td class="font-semibold">{{ category.name }}</td>
         <td>{{ category.description || '—' }}</td>
 
@@ -78,6 +97,11 @@ onMounted(loadCategories)
           >
             Ver productos
           </button>
+        </td>
+      </tr>
+      <tr v-if="!filteredCategories.length">
+        <td colspan="4" class="text-center text-gray-400 py-6">
+          No se encontraron categorías con ese nombre
         </td>
       </tr>
     </template>
