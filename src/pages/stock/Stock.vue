@@ -42,48 +42,48 @@ onMounted(loadCategories)
 </script>
 
 <template>
-  <!-- Botón secundario -->
-  <div class="flex justify-end mb-4">
-    <button
-      class="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200"
-      @click="openRegisterCategory"
-    >
-      Registrar categoría
-    </button>
+  <!-- Acciones superiores -->
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl font-semibold">Inventario</h1>
+
+    <div class="flex gap-2">
+      <button
+        class="btn-secondary"
+        @click="openRegisterCategory"
+      >
+        Registrar categoría
+      </button>
+    </div>
   </div>
 
   <AppTable
-    title="Inventario"
-    description="Gestión de categorías y productos"
-    :headers="['Nombre', 'Descripción', 'Productos']"
+    title="Categorías"
+    description="Gestión de categorías de productos"
+    :headers="['Nombre', 'Descripción', 'Productos', 'Acciones']"
     :on-add="openRegisterProduct"
   >
     <template #default>
       <tr v-for="category in categories" :key="category.id">
         <td class="font-semibold">{{ category.name }}</td>
         <td>{{ category.description || '—' }}</td>
-        <td>
-          <div class="grid grid-cols-2 gap-2">
-            <div
-              v-for="product in category.products"
-              :key="product.id"
-              class="border rounded p-2 bg-gray-50"
-            >
-              <p class="font-medium">{{ product.name }}</p>
-              <p class="text-xs text-gray-600">
-                ${{ product.price }} · Stock: {{ product.stock }}
-              </p>
-            </div>
 
-            <span v-if="!category.products.length" class="text-xs text-gray-400">
-              Sin productos
-            </span>
-          </div>
+        <td class="text-center">
+          {{ category.products.length }}
+        </td>
+
+        <td>
+          <button
+            class="btn-primary-sm"
+            @click="$router.push(`/stock/category/${category.id}`)"
+          >
+            Ver productos
+          </button>
         </td>
       </tr>
     </template>
   </AppTable>
 
+  <!-- Modales -->
   <RegisterProductModal
     v-if="showRegisterProductModal"
     @close="showRegisterProductModal = false"
@@ -96,3 +96,4 @@ onMounted(loadCategories)
     @success="onCategoryRegistered"
   />
 </template>
+

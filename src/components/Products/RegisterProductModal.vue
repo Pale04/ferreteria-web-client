@@ -110,6 +110,7 @@ onMounted(loadCategories)
         <p v-if="errorMessage" class="text-sm text-red-600">
           {{ errorMessage }}
         </p>
+
       <div class="flex justify-end gap-3 pt-4">
         <button class="btn-secondary" @click="emit('close')">
           Cancelar
