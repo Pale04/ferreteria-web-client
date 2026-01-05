@@ -23,9 +23,9 @@ defineProps({
 
 <style scoped>
 .app-button {
-  background-color: #4a3aff; /* El color morado de tu diseño */
+  background-color: #4a3aff;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 203px;
   border: none;
   border-radius: 8px;
   font-weight: 600;

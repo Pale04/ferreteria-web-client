@@ -1,28 +1,28 @@
 <script setup>
-import { ref } from 'vue'
-import { useSessionStore } from '@/stores/session'
-import router from '@/router'
-import AuthRepository from '@/repositories/AuthRepository'
+  import { ref } from 'vue'
+  import { useSessionStore } from '@/stores/session'
+  import router from '@/router'
+  import AuthRepository from '@/repositories/AuthRepository'
 
-defineOptions({ name: 'LoginPage' })
+  defineOptions({ name: 'LoginPage' })
 
-const session = useSessionStore()
+  const session = useSessionStore()
 
-const credentials = ref({
-  email: '',
-  password: ''
-})
+  const credentials = ref({
+    email: '',
+    password: ''
+  })
 
-const errorMessage = ref('')
-const isLoading = ref(false)
+  const errorMessage = ref('')
+  const isLoading = ref(false)
 
-async function handleLogin() {
-  try {
-    isLoading.value = true
-    errorMessage.value = ''
+  async function handleLogin() {
+    try {
+      isLoading.value = true
+      errorMessage.value = ''
 
-    const data = await AuthRepository.login(credentials.value)
-    session.setSession(data)
+      const data = await AuthRepository.login(credentials.value)
+      session.setSession(data)
 
     if(session.isAdmin){
       router.push({ path: '/pos'})
@@ -94,18 +94,16 @@ async function handleLogin() {
           </p>
         </div>
       </div>
-
-
     </form>
   </div>
 </template>
 
 <style scoped>
-/* Transición suave para el mensaje de error */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s;
-}
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-}
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.3s;
+  }
+
+  .fade-enter-from, .fade-leave-to {
+    opacity: 0;
+  }
 </style>
