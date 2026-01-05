@@ -32,6 +32,10 @@ const routes = [
       {
         path: 'stock',
         component: Stock
+      },
+      {
+        path: '/stock/category/:id',
+        component: () => import('@/pages/stock/CategoryProducts.vue'),
       }
     ]
   },

@@ -24,17 +24,17 @@
       const data = await AuthRepository.login(credentials.value)
       session.setSession(data)
 
-      if(session.isAdmin){
-        router.push({ path: '/pos'})
-      } else {
-        router.push('/products')
-      }
-    } catch (error) {
-      errorMessage.value = error.response?.data || "Ocurrió un error inesperado. Por favor intente más tarde."
-    } finally {
-      isLoading.value = false
+    if(session.isAdmin){
+      router.push({ path: '/pos'})
+    } else {
+      router.push('/stock')
     }
+  } catch (error) {
+    errorMessage.value = error.response?.data || "Ocurrió un error inesperado. Por favor intente más tarde."
+  } finally {
+    isLoading.value = false
   }
+}
 </script>
 
 <template>

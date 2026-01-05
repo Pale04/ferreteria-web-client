@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://localhost:63369/api/employees';
+const API_URL = 'https://localhost:5000/api/employees';
 
 export default {
     async deleteEmployee(id){
