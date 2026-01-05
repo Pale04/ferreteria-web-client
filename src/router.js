@@ -1,7 +1,7 @@
 import { useSessionStore } from '@/stores/session'
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/pages/login/index.vue'
-import Employees from '@/pages/employees/index.vue'
+import Employees from '@/pages/employees/Employees.vue'
 import AppLayout from '@/components/Layout/AppLayout.vue'
 import Pos from '@/pages/pos/Pos.vue'
 import Providers from '@/pages/providers/Providers.vue'
