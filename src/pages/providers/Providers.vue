@@ -1,10 +1,14 @@
 <script setup>
   import AppTable from '@/components/Table/AppTable.vue';
   import DataRowAppTable from '@/components/Table/DataRowAppTable.vue';
-  import AppLinkButton from '@/components/AppLinkButton.vue';
+  import EditProviderButton from './EditProviderButton.vue';
   import PopUp from '@/components/PopUp.vue';
-  import AddProviderForm from '@/pages/providers/AddProviderForm.vue';
+  import Form from './Form.vue';
   import { reactive, ref } from 'vue';
+  import { addProvider, updateProvider } from '@/repositories/ProvidersRepository';
+  import { useToast } from 'vue-toastification';
+
+  const toast = useToast();
 
   const headers = reactive([
     'RFC',
@@ -12,7 +16,8 @@
     'Teléfono',
     'Correo',
     'Dirección Fiscal',
-    'Activado'
+    'Estado',
+    'Acciones'
   ])
 
   const items = reactive([
@@ -37,18 +42,46 @@
   ])
 
   const addProviderFormVisible = ref(false)
+  const updateProviderFormVisible = ref(false)
+  const providerBeeingUpdated = ref(0)
 
   function showAddProviderForm() {
     addProviderFormVisible.value = true;
   }
 
-  function closeAddProviderForm() {
-    addProviderFormVisible.value = false;
+  async function sendAddProviderForm(provider) {
+    const response = await addProvider(provider)
+
+    if (response.success) {
+      toast.info(response.msg)
+    } else {
+      toast.warning(response.msg)
+    }
   }
 
-  function showProviderUpdateForm() {
-    console.log('Update')
+  function closeAddProviderForm() {
+    addProviderFormVisible.value = false
   }
+
+  function showUpdateProviderForm(id) {
+    updateProviderFormVisible.value = true
+    providerBeeingUpdated.value = id
+  }
+
+  async function sendUpdateProviderForm(provider) {
+    const response = await updateProvider(provider)
+
+    if(response.success) {
+      toast.info('Los datos han sido actualizados correctamente')
+    } else {
+      toast.warning(response.msg)
+    }
+  }
+
+  function closeUpdateProviderForm() {
+    updateProviderFormVisible.value = false
+  }
+
 </script>
 
 <template>
@@ -65,14 +98,26 @@
       <DataRowAppTable :field="item.phone"/>
       <DataRowAppTable :field="item.email"/>
       <DataRowAppTable :field="item.address"/>
-      <DataRowAppTable :field="item.active"/>
-      <DataRowAppTable class="text-right text-sm font-medium">
-        <AppLinkButton description="Edit" :onClick="showProviderUpdateForm"/>
+      <DataRowAppTable :field="item.active ? 'Activo' : 'Desactivado'"/>
+      <DataRowAppTable class="text-sm font-medium" @clicked="showUpdateProviderForm">
+        <EditProviderButton text="Editar" :id="item.id" @clicked="showUpdateProviderForm"/>
+        <EditProviderButton :text="item.active ? 'Desactivar' : 'Activar'" :id="item.id" @clicked="showUpdateProviderForm"/>
       </DataRowAppTable>
     </tr>
   </AppTable>
 
   <PopUp v-if="addProviderFormVisible" :onClosed="closeAddProviderForm">
-    <AddProviderForm/>
+    <Form
+      :on-form-sent="sendAddProviderForm"
+      sendButtonText="Registrar"
+      title="Agregar nuevo Proveedor"/>
+  </PopUp>
+
+  <PopUp v-if="updateProviderFormVisible" :onClosed="closeUpdateProviderForm">
+    <Form
+      :on-form-sent="sendUpdateProviderForm"
+      sendButtonText="Guardar cambios"
+      title="Editar datos de Proveedor"
+      :providerId="providerBeeingUpdated"/>
   </PopUp>
 </template>

@@ -1,18 +1,28 @@
 <script setup>
-  import { ref } from 'vue';
+  import { onMounted, reactive, ref } from 'vue';
   import Button from '@/components/Button.vue';
   import AppInputField from '@/components/AppInputField.vue';
   import { emailRegexPattern } from '@/utils/constants';
-  import { addProvider } from '@/repositories/ProvidersRepository';
+  import { getProvider } from '@/repositories/ProvidersRepository';
   import { useToast } from 'vue-toastification';
 
-  const toast = useToast();
+  const toast = useToast()
 
-  const rfc = ref('');
-  const name = ref('');
-  const phone = ref('');
-  const email = ref('');
-  const address = ref('');
+  const props = defineProps({
+    onFormSent: Function,
+    title: String,
+    sendButtonText: String,
+    providerId: {
+      type: Number,
+      default: 0
+    }
+  })
+
+  const rfc = ref('')
+  const name = ref('')
+  const phone = ref('')
+  const email = ref('')
+  const address = ref('')
 
   const rfcIsValid = ref(true)
   const nameIsValid = ref(true)
@@ -26,6 +36,7 @@
     validateForm()
     if (rfcIsValid.value && nameIsValid.value && phoneIsValid.value && emailIsValid.value && addressIsValid.value) {
       const provider = {
+        id: props.providerId,
         rfc: rfc.value,
         name: name.value,
         phone: phone.value,
@@ -33,13 +44,7 @@
         address: address.value
       }
 
-      const response = await addProvider(provider)
-
-      if (response.success) {
-        toast.info(response.msg)
-      } else {
-        toast.warning(response.msg)
-      }
+      props.onFormSent(provider)
     }
   }
 
@@ -56,7 +61,7 @@
       errors.set('rfc','Proporcione un RFC válido por favor.')
     }
 
-    if(nameIsValid.value) {
+    if(name.value) {
       errors.delete('name')
     } else {
       errors.set('name','Proporcione el nombre por favor.')
@@ -80,12 +85,27 @@
       errors.set('address','Proporcione la dirección de manera más corta')
     }
   }
+
+  onMounted(async () => {
+    if (props.providerId > 0) {
+      const result = await getProvider(props.providerId)
+      if (result.success) {
+        rfc.value = result.data.rfc
+        name.value = result.data.name
+        phone.value = result.data.phone
+        email.value = result.data.email
+        address.value = result.data.address ?? ''
+      } else {
+        toast.warning(result.msg)
+      }
+    }
+  })
 </script>
 
 <template>
   <div class="text-center">
     <p class="mb-3 text-2xl font-semibold leading-5 text-slate-900 py-5">
-      Agregar nuevo Proveedor
+      {{ title }}
     </p>
   </div>
 
@@ -126,6 +146,7 @@
         placeholder="Ej. 2201020304"
         :required="true"
         v-model="phone"
+        text=""
       />
       <span v-if="!phoneIsValid" class="text-sm text-red-600">{{ errors.get('phone') }}</span>
     </div>
@@ -139,6 +160,7 @@
         placeholder="Ej. proveedor@empresa.com"
         :required="true"
         v-model="email"
+        text=""
       />
       <span v-if="!emailIsValid" class="text-sm text-red-600">{{ errors.get('email') }}</span>
     </div>
@@ -152,12 +174,13 @@
         placeholder="Ej. Emiliano Zapata 19, Col. Centro, CP. 91000, Xalapa, Ver., México"
         :required="true"
         v-model="address"
+        text=""
       />
       <span v-if="!addressIsValid" class="text-sm text-red-600">{{ errors.get('address') }}</span>
     </div>
 
     <div class="mt-10">
-      <Button text="Registrar" :on-click="sendForm" buttonClass="w-full bg-indigo-600 hover:bg-indigo-700 text-white"/>
+      <Button :text="sendButtonText" :on-click="sendForm" buttonClass="w-full bg-indigo-600 hover:bg-indigo-700 text-white"/>
     </div>
 
   </form>

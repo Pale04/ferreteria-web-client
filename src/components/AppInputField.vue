@@ -6,9 +6,9 @@
     name: String,
     placeholder: {
       type: String,
-      defaul: ''
+      default: ''
     },
-    required: Boolean
+    required: Boolean,
   })
 
   const model = defineModel()
