@@ -61,6 +61,36 @@ export async function getProvider(id) {
   }
 }
 
+export async function getAllProviders() {
+  const token = localStorage.getItem('user_token');
+  try {
+    const response = await axios.get(baseUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: 'application/json'
+      }
+    })
+
+    switch (response.status) {
+      case 200:
+        return {
+          success: true,
+          data: response.data
+        };
+      default:
+        return {
+          success: false,
+          msg: response.data.msg
+        };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      msg: error.response.data.msg
+    }
+  }
+}
+
 export async function updateProvider(provider) {
   const token = localStorage.getItem('user_token');
   try {
@@ -68,6 +98,35 @@ export async function updateProvider(provider) {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
+      }
+    })
+
+    switch (response.status) {
+      case 204:
+        return {
+          success: true
+        };
+      default:
+        return {
+          success: false,
+          msg: response.data.msg
+        };
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      success: false,
+      msg: error.response.data.msg
+    }
+  }
+}
+
+export async function updateProviderState(id) {
+  const token = localStorage.getItem('user_token');
+  try {
+    const response = await axios.patch(`${baseUrl}/${id}/state`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`
       }
     })
 

@@ -4,8 +4,8 @@
   import EditProviderButton from './EditProviderButton.vue';
   import PopUp from '@/components/PopUp.vue';
   import Form from './Form.vue';
-  import { reactive, ref } from 'vue';
-  import { addProvider, updateProvider } from '@/repositories/ProvidersRepository';
+  import { onMounted, reactive, ref } from 'vue';
+  import { addProvider, getAllProviders, updateProvider, updateProviderState } from '@/repositories/ProvidersRepository';
   import { useToast } from 'vue-toastification';
 
   const toast = useToast();
@@ -15,31 +15,11 @@
     'Nombre',
     'Teléfono',
     'Correo',
-    'Dirección Fiscal',
     'Estado',
     'Acciones'
   ])
 
-  const items = reactive([
-    {
-      id: 1,
-      rfc: 'ABC123456A00',
-      name: 'Truper',
-      phone: '2231456756',
-      email: 'truper@gmail.com',
-      address: 'Av. Xalapa S/N',
-      active: true
-    },
-    {
-      id: 2,
-      rfc: 'ABC123456A00',
-      name: 'Truper',
-      phone: '2231456756',
-      email: 'truper@gmail.com',
-      address: 'Av. Xalapa S/N',
-      active: true
-    },
-  ])
+  const providers = reactive([])
 
   const addProviderFormVisible = ref(false)
   const updateProviderFormVisible = ref(false)
@@ -72,9 +52,11 @@
     const response = await updateProvider(provider)
 
     if(response.success) {
+      const providerIndex = providers.findIndex((p) => p.id === provider.id)
+      providers[providerIndex] = provider
       toast.info('Los datos han sido actualizados correctamente')
     } else {
-      toast.warning(response.msg)
+      toast.warning(response.msg ?? 'Ocurrió algo inesperado. Intente de nuevo más tarde')
     }
   }
 
@@ -82,26 +64,53 @@
     updateProviderFormVisible.value = false
   }
 
+  async function changeProviderState(id) {
+    const response = await updateProviderState(id)
+
+    if(response.success) {
+      var provider = providers.find((p) => p.id === id)
+      provider.active = !provider.active
+      toast.info('El estado del proveedor se ha actualizado')
+    } else {
+      toast.warning(response.msg ?? 'Ocurrió algo inesperado. Intente de nuevo más tarde')
+    }
+  }
+
+  onMounted(async () => {
+    const response = await getAllProviders();
+
+    if(response.success) {
+      if (response.data.length === 0) {
+
+      } else {
+        for (let i = 0; i < response.data.length; i++) {
+          providers.push(response.data[i])
+        }
+      }
+    } else {
+      toast.warning(response.msg)
+    }
+  })
 </script>
 
 <template>
   <AppTable
     title="Proveedores"
-    description="Todos los proveedores registrados en el sistema"
+    description="Todos los proveedores registrados"
     :headers="headers"
     :onAdd="showAddProviderForm"
     >
 
-    <tr v-for="item in items" v-bind:key="item.id" class="hover:bg-gray-50 transition-colors duration-150">
+    <tr v-for="item in providers" v-bind:key="item.id" class="hover:bg-gray-50 transition-colors duration-150">
       <DataRowAppTable :field="item.rfc" class="font-medium"/>
       <DataRowAppTable :field="item.name"/>
       <DataRowAppTable :field="item.phone"/>
       <DataRowAppTable :field="item.email"/>
-      <DataRowAppTable :field="item.address"/>
       <DataRowAppTable :field="item.active ? 'Activo' : 'Desactivado'"/>
       <DataRowAppTable class="text-sm font-medium" @clicked="showUpdateProviderForm">
         <EditProviderButton text="Editar" :id="item.id" @clicked="showUpdateProviderForm"/>
-        <EditProviderButton :text="item.active ? 'Desactivar' : 'Activar'" :id="item.id" @clicked="showUpdateProviderForm"/>
+        <span class="p-5"></span>
+        <EditProviderButton :text="item.active ? 'Desactivar' : 'Activar'" :id="item.id" @clicked="changeProviderState"/>
       </DataRowAppTable>
     </tr>
   </AppTable>
