@@ -65,3 +65,35 @@ export async function updateProduct(productId, payload) {
     throw new Error('NETWORK_ERROR')
   }
 }
+
+export async function getProductsBySearchString(searchString) {
+  const session = useSessionStore()
+
+  try {
+    const response = await axios.get(
+    `${baseUrl}?s=${searchString}`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    })
+
+    switch (response.status) {
+      case 200:
+        return {
+          success: true,
+          data: response.data
+        };
+      default:
+        return {
+          success: false,
+          msg: response.data.msg
+        };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      msg: error.response.data.msg
+    }
+  }
+}
