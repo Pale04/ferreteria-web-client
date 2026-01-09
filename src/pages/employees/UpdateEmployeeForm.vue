@@ -11,7 +11,7 @@
         }
     })
 
-    const emit = defineEmits(['updated'])
+    const emit = defineEmits([null])
 
     const toast = ref({
         show: false,
@@ -41,6 +41,14 @@
         setTimeout(() => toast.value.show = false, 5000)
     }
 
+    function validatePhone(event) {
+        employee.value.phone = event.target.value.replace(/\D/g, '');
+    }
+
+    function validatePostalCode(event) {
+        employee.value.postalCode = event.target.value.replace(/\D/g, '');
+    }
+
     async function fetchEmployeeData() {
         try {
             isFetching.value = true
@@ -66,14 +74,6 @@
     }
 
     onMounted(fetchEmployeeData)
-
-    function validatePhone(event) {
-        employee.value.phone = event.target.value.replace(/\D/g, '');
-    }
-
-    function validatePostalCode(event) {
-        employee.value.postalCode = event.target.value.replace(/\D/g, '');
-    }
 
     async function sendUpdate() {
         try {
@@ -113,27 +113,27 @@
         </div>
 
         <div>
-            <label class="font-semibold">Apellido paterno</label>
+            <label class="font-semibold">Apellido paterno:</label>
             <input v-model="employee.lastName" maxlength="50" placeholder="Apellido paterno" required />
         </div>
 
         <div>
-            <label class="font-semibold">Apellido materno</label>
+            <label class="font-semibold">Apellido materno:</label>
             <input v-model="employee.secondLastName" maxlength="50" placeholder="Apellido materno (opcional)" />
         </div>
 
         <div>
-            <label class="font-semibold">Teléfono</label>
+            <label class="font-semibold">Teléfono:</label>
             <input v-model="employee.phone" maxlength="10" @input="validatePhone" placeholder="Teléfono" required />
         </div>
 
         <div>
-            <label class="font-semibold">Fecha de nacimiento</label>
+            <label class="font-semibold">Fecha de nacimiento:</label>
             <input v-model="employee.birthDate" type="date" required />
         </div>
 
         <div>
-            <label class="font-semibold">Género</label>
+            <label class="font-semibold">Género:</label>
             <select v-model="employee.gender" required>
                 <option value="">Seleccionar género:</option>
                 <option value="Masculino">Masculino</option>
@@ -142,22 +142,22 @@
         </div>
 
         <div>
-            <label class="font-semibold">Ciudad</label>
+            <label class="font-semibold">Ciudad:</label>
             <input v-model="employee.city" maxlength="100" placeholder="Ciudad" required />
         </div>
 
         <div>
-            <label class="font-semibold">Dirección</label>
+            <label class="font-semibold">Dirección:</label>
             <input v-model="employee.address" maxlength="255" placeholder="Dirección" required />
         </div>
 
         <div>
-            <label class="font-semibold">Código postal</label>
+            <label class="font-semibold">Código postal:</label>
             <input v-model="employee.postalCode" maxlength="5" @input="validatePostalCode" placeholder="Código postal" required />
         </div>
 
         <div class="actions">
-            <AppButton type="submit" :disabled="isLoading">
+            <AppButton class="updateButton" type="submit" :disabled="isLoading">
                 {{ isLoading ? 'Guardando...' : 'Guardar cambios' }}
             </AppButton>
         </div>
@@ -168,4 +168,6 @@
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; }
     .actions { grid-column: span 2; display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; }
     input, select { padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; width: 100%; }
+    .updateButton { background-color: green; } 
+    .updateButton:hover:not(:disabled) { background-color: darkgreen; transform: translateY(-1px); }
 </style>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useSessionStore } from '@/stores/session'
 
-const API_URL = 'http://localhost:5000/api'
+const API_URL = 'https://localhost:5000/api'
 
 export async function registerProduct(payload) {
   const session = useSessionStore()

@@ -8,7 +8,7 @@
   import AddEmployeeForm from './AddEmployeeForm.vue'
   import UpdateEmployeeForm from './UpdateEmployeeForm.vue'
   import EmployeesRepository from '@/repositories/EmployeesRepository'
-import DeleteEmployeePage from './DeleteEmployeePage.vue'
+  import DeleteEmployeePage from './DeleteEmployeePage.vue'
 
   defineOptions({ name: 'EmployeesIndex' })
 
@@ -18,10 +18,10 @@ import DeleteEmployeePage from './DeleteEmployeePage.vue'
     type: 'success'
   })
 
-  const selectedEmployeeId = ref(null)
-
   const headers = ['Nombre', 'Apellido', 'Correo electrónico', 'Teléfono', 'Acciones']
   const items = ref([])
+
+  const selectedEmployeeId = ref(null)
 
   const addEmployeeFormVisible = ref(false)
   const updateEmployeeFormVisible = ref(false)
@@ -32,27 +32,33 @@ import DeleteEmployeePage from './DeleteEmployeePage.vue'
       const data = await EmployeesRepository.getActiveEmployees()
       items.value = data
     } catch (error) {
-      const errorMsg = error.response?.data || "Ocurrió un error inesperado. Por favor intente más tarde."
+      const errorMsg = error.response?.data || "Estamos presentando fallas en el sistema. Por favor vuelva más tarde."
       showMessage(errorMsg, "error")
     }
   }
 
   onMounted(() => {
-      loadEmployees()
-    })
+    loadEmployees()
+  })
+
+  function handleAddSuccess() {
+    loadEmployees()
+    addEmployeeFormVisible.value = false 
+    showMessage("El empleado se ha registrado correctamente.", "success")
+  }
 
   function handleUpdateSuccess() {
     loadEmployees()
-    updateEmployeeFormVisible.value = false 
     selectedEmployeeId.value = null
+    updateEmployeeFormVisible.value = false 
     showMessage("Los datos del empleado se han actualizado correctamente.", "success")
   }
 
   function handleDeleteSuccess(){
     loadEmployees()
-    deleteEmployeePageVisible.value = false
     selectedEmployeeId.value = null
-    showMessage("El empleado ha sido eliminado correctamente.", "success")
+    deleteEmployeePageVisible.value = false
+    showMessage("El empleado se ha eliminado correctamente.", "success")
   }
 
   function showMessage(msg, type = 'success') {
@@ -122,7 +128,9 @@ import DeleteEmployeePage from './DeleteEmployeePage.vue'
   </AppTable>
 
   <PopUp v-if="addEmployeeFormVisible" :onClosed="closeAddEmployeeForm">
-    <AddEmployeeForm/>
+    <AddEmployeeForm
+      @registered="handleAddSuccess"
+    />
   </PopUp>
 
   <PopUp v-if="updateEmployeeFormVisible" :onClosed="closeUpdateEmployeeForm">

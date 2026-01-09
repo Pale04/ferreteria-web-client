@@ -11,7 +11,7 @@
         }
     })
 
-    const emit = defineEmits(['updated'])
+    const emit = defineEmits([null])
 
     const toast = ref({
         show: false,
@@ -41,6 +41,14 @@
         setTimeout(() => toast.value.show = false, 5000)
     }
 
+    function validatePhone(event) {
+        employee.value.phone = event.target.value.replace(/\D/g, '');
+    }
+
+    function validatePostalCode(event) {
+        employee.value.postalCode = event.target.value.replace(/\D/g, '');
+    }
+
     async function fetchEmployeeData() {
         try {
             isFetching.value = true
@@ -67,16 +75,8 @@
 
     onMounted(fetchEmployeeData)
 
-    function validatePhone(event) {
-        employee.value.phone = event.target.value.replace(/\D/g, '');
-    }
-
-    function validatePostalCode(event) {
-        employee.value.postalCode = event.target.value.replace(/\D/g, '');
-    }
-
     async function confirmDelete() {
-        const confirmed = window.confirm(`¿Estás segudo de que deseas eliminar al empleado ${employee.value.name}?`);
+        const confirmed = window.confirm(`¿Estás seguro de que deseas eliminar al empleado ${employee.value.name}? Esta acción no se puede deshacer.`);
 
         if (confirmed) {
             try {
@@ -99,7 +99,7 @@
             Dar de baja Empleado
         </p>
         <p class="deleteMsg font-semibold">
-            El siguiente empleado será eliminado junto con toda su información relacionada:
+            El siguiente empleado será eliminado permanentemente junto con toda su información relacionada:
         </p>
     </div>
 
@@ -120,27 +120,27 @@
         </div>
 
         <div>
-            <label class="font-semibold">Apellido paterno</label>
+            <label class="font-semibold">Apellido paterno:</label>
             <input v-model="employee.lastName" maxlength="50" placeholder="Apellido paterno" disabled="true"/>
         </div>
 
         <div>
-            <label class="font-semibold">Apellido materno</label>
+            <label class="font-semibold">Apellido materno:</label>
             <input v-model="employee.secondLastName" maxlength="50" placeholder="Apellido materno (opcional)" disabled="true"/>
         </div>
 
         <div>
-            <label class="font-semibold">Teléfono</label>
+            <label class="font-semibold">Teléfono:</label>
             <input v-model="employee.phone" maxlength="10" @input="validatePhone" placeholder="Teléfono" disabled="true"/>
         </div>
 
         <div>
-            <label class="font-semibold">Fecha de nacimiento</label>
+            <label class="font-semibold">Fecha de nacimiento:</label>
             <input v-model="employee.birthDate" type="date" disabled="true"/>
         </div>
 
         <div>
-            <label class="font-semibold">Género</label>
+            <label class="font-semibold">Género:</label>
             <select v-model="employee.gender" disabled="true">
                 <option value="">Seleccionar género:</option>
                 <option value="Masculino">Masculino</option>
@@ -149,22 +149,22 @@
         </div>
 
         <div>
-            <label class="font-semibold">Ciudad</label>
+            <label class="font-semibold">Ciudad:</label>
             <input v-model="employee.city" maxlength="100" placeholder="Ciudad" disabled="true"/>
         </div>
 
         <div>
-            <label class="font-semibold">Dirección</label>
+            <label class="font-semibold">Dirección:</label>
             <input v-model="employee.address" maxlength="255" placeholder="Dirección" disabled="true"/>
         </div>
 
         <div>
-            <label class="font-semibold">Código postal</label>
+            <label class="font-semibold">Código postal:</label>
             <input v-model="employee.postalCode" maxlength="5" @input="validatePostalCode" placeholder="Código postal" disabled="true"/>
         </div>
 
         <div class="actions">
-            <AppButton type="submit" :disabled="isLoading">
+            <AppButton class="deleteButton" type="submit" :disabled="isLoading">
                 {{ isLoading ? 'Eliminando...' : 'Eliminar empleado' }}
             </AppButton>
         </div>
@@ -175,5 +175,7 @@
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1rem; }
     .actions { grid-column: span 2; display: flex; gap: 1rem; justify-content: center; margin-top: 1rem; }
     input, select { padding: 0.6rem; border: 1px solid #ddd; border-radius: 6px; width: 100%; }
-    .deleteMsg { font-size: 17px; color: #ff4d4f; background: none; border: none; text-decoration: underline;}
+    .deleteMsg { font-size: 17px; color: red; background: none; border: none; text-decoration: underline; }
+    .deleteButton { background-color: red; } 
+    .deleteButton:hover:not(:disabled) { background-color: darkred; transform: translateY(-1px); }
 </style>
