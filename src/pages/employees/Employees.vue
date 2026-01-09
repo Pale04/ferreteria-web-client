@@ -1,5 +1,6 @@
 <script setup>
   import { ref, onMounted } from 'vue'
+  import { useToast } from 'vue-toastification'
   import AppTable from '@/components/Table/AppTable.vue'
   import DataRowAppTable from '@/components/Table/DataRowAppTable.vue'
   import AppLinkButton from '@/components/AppLinkButton.vue'
@@ -12,11 +13,7 @@
 
   defineOptions({ name: 'EmployeesIndex' })
 
-  const toast = ref({
-    show: false,
-    message: '',
-    type: 'success'
-  })
+  const toast = useToast()
 
   const headers = ['Nombre', 'Apellido', 'Correo electrónico', 'Teléfono', 'Acciones']
   const items = ref([])
@@ -33,7 +30,7 @@
       items.value = data
     } catch (error) {
       const errorMsg = error.response?.data || "Estamos presentando fallas en el sistema. Por favor vuelva más tarde."
-      showMessage(errorMsg, "error")
+      toast.error(errorMsg)
     }
   }
 
@@ -44,28 +41,21 @@
   function handleAddSuccess() {
     loadEmployees()
     addEmployeeFormVisible.value = false 
-    showMessage("El empleado se ha registrado correctamente.", "success")
+    toast.success("El empleado se ha registrado correctamente.")
   }
 
   function handleUpdateSuccess() {
     loadEmployees()
     selectedEmployeeId.value = null
     updateEmployeeFormVisible.value = false 
-    showMessage("Los datos del empleado se han actualizado correctamente.", "success")
+    toast.success("Los datos del empleado se han actualizado correctamente.")
   }
 
   function handleDeleteSuccess(){
     loadEmployees()
     selectedEmployeeId.value = null
     deleteEmployeePageVisible.value = false
-    showMessage("El empleado se ha eliminado correctamente.", "success")
-  }
-
-  function showMessage(msg, type = 'success') {
-    toast.value.message = msg
-    toast.value.type = type
-    toast.value.show = true
-    setTimeout(() => toast.value.show = false, 5000)
+    toast.success("El empleado se ha eliminado correctamente.")
   }
 
   function showAddEmployeeForm() {

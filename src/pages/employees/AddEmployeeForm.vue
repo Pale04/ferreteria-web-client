@@ -1,19 +1,16 @@
 <script setup>
     import { ref } from 'vue'
+    import { useToast } from 'vue-toastification'
     import AppButton from '@/components/AppButton.vue'
     import AppToastNotification from '@/components/AppToastNotification.vue'
     import EmployeesRepository from '@/repositories/EmployeesRepository'
 
     const emit = defineEmits([null])
 
+    const toast = useToast()
+
     const showPassword = ref(false);
     const showConfirmPassword = ref(false);
-
-    const toast = ref({
-        show: false,
-        message: '',
-        type: 'success'
-    })
     
     const isLoading = ref(false)
 
@@ -34,13 +31,6 @@
 
     const newEmployee = ref({ ...initialState })
 
-    function showMessage(msg, type = 'success') {
-        toast.value.message = msg
-        toast.value.type = type
-        toast.value.show = true
-        setTimeout(() => toast.value.show = false, 5000)
-    }
-
     function validatePhone(event){
         newEmployee.value.phone = event.target.value.replace(/\D/g, '');
     }
@@ -51,7 +41,6 @@
 
     function validatePassword(){
         if (newEmployee.value.password != newEmployee.value.confirmPassword){
-            showMessage("Las contraseñas no coinciden.", "error")
             return;
         }
     }
@@ -65,7 +54,7 @@
             emit('registered')
         } catch (error) {
             const errorMsg = error.response?.data || "Ocurrió un error inesperado. Por favor intente más tarde."
-            showMessage(errorMsg, "error")
+            toast.error(errorMsg)
         } finally {
             isLoading.value = false
         }

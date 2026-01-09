@@ -1,5 +1,6 @@
 <script setup>
     import { ref, onMounted } from 'vue'
+    import { useToast } from 'vue-toastification'
     import AppButton from '@/components/AppButton.vue'
     import AppToastNotification from '@/components/AppToastNotification.vue'
     import EmployeesRepository from '@/repositories/EmployeesRepository'
@@ -13,11 +14,7 @@
 
     const emit = defineEmits([null])
 
-    const toast = ref({
-        show: false,
-        message: '',
-        type: 'success'
-    })
+    const toast = useToast()
 
     const isLoading = ref(false)
     const isFetching = ref(true)
@@ -33,13 +30,6 @@
         address: '',
         postalCode: ''
     })
-
-    function showMessage(msg, type = 'success') {
-        toast.value.message = msg
-        toast.value.type = type
-        toast.value.show = true
-        setTimeout(() => toast.value.show = false, 5000)
-    }
 
     function validatePhone(event) {
         employee.value.phone = event.target.value.replace(/\D/g, '');
@@ -67,7 +57,7 @@
             }
         } catch (error) {
             const errorMsg = error.response?.data || "No fue posible recuperar la información del empleado. Por favor intente más tarde."
-            showMessage(errorMsg, "error")
+            toast.error(errorMsg)
         } finally {
             isFetching.value = false
         }
@@ -82,7 +72,7 @@
             emit('updated')
         } catch (error) {
             const errorMsg = error.response?.data || "Ocurrió un error inesperado. Por favor intente más tarde."
-            showMessage(errorMsg, "error")
+            toast.error(errorMsg)
         } finally {
             isLoading.value = false
         }
