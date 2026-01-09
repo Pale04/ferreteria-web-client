@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const url = 'http://localhost:5000/api/provider'
+const url = 'https://localhost:5000/api/provider'
 
 export async function addProvider(provider) {
   try {

@@ -4,6 +4,11 @@
     import AppToastNotification from '@/components/AppToastNotification.vue'
     import EmployeesRepository from '@/repositories/EmployeesRepository'
 
+    const emit = defineEmits([null])
+
+    const showPassword = ref(false);
+    const showConfirmPassword = ref(false);
+
     const toast = ref({
         show: false,
         message: '',
@@ -13,10 +18,18 @@
     const isLoading = ref(false)
 
     const initialState = {
-        name: '', lastName: '', secondLastName: '',
-        email: '', phone: '', birthDate: '',
-        gender: '', city: '', address: '',
-        postalCode: '', password: '', confirmPassword: ''
+        name: '',
+        lastName: '',
+        secondLastName: '',
+        email: '',
+        phone: '',
+        birthDate: '',
+        gender: '',
+        city: '',
+        address: '',
+        postalCode: '',
+        password: '',
+        confirmPassword: ''
     }
 
     const newEmployee = ref({ ...initialState })
@@ -49,9 +62,7 @@
         try {
             isLoading.value = true
             await EmployeesRepository.registerEmployee(newEmployee.value)
-            showMessage("El empleado se ha registrado correctamente.", "success")
-            newEmployee.value = { ...initialState }
-            console.log("pendejo")
+            emit('registered')
         } catch (error) {
             const errorMsg = error.response?.data || "Ocurrió un error inesperado. Por favor intente más tarde."
             showMessage(errorMsg, "error")
@@ -75,11 +86,11 @@
     />
 
     <form @submit.prevent="sendForm" class="form-grid">
-        <input v-model="newEmployee.name" maxlength="50" placeholder="Nombre(s)" required />
-        <input v-model="newEmployee.lastName" maxlength="50" placeholder="Apellido paterno" required />
+        <input v-model="newEmployee.name" maxlength="50" placeholder="Nombre(s)*" required />
+        <input v-model="newEmployee.lastName" maxlength="50" placeholder="Apellido paterno*" required />
         <input v-model="newEmployee.secondLastName" maxlength="50" placeholder="Apellido materno (opcional)" />
-        <input v-model="newEmployee.email" type="email" maxlength="254" placeholder="Correo electrónico" required />
-        <input v-model="newEmployee.phone" maxlength="10" @input="validatePhone" placeholder="Teléfono" required />
+        <input v-model="newEmployee.email" type="email" maxlength="254" placeholder="Correo electrónico*" required />
+        <input v-model="newEmployee.phone" maxlength="10" @input="validatePhone" placeholder="Teléfono*" required />
         <input v-model="newEmployee.birthDate" type="date" required />
     
         <select v-model="newEmployee.gender" required>
@@ -88,11 +99,37 @@
             <option value="Femenino">Femenino</option>
         </select>
 
-        <input v-model="newEmployee.city" maxlength="100" placeholder="Ciudad" required />
-        <input v-model="newEmployee.address" maxlength="255" placeholder="Dirección" required />
-        <input v-model="newEmployee.postalCode" maxlength="5" @input="validatePostalCode" placeholder="Código postal" required />
-        <input v-model="newEmployee.password" maxlength="60" type="password" placeholder="Contraseña" required minlength="8" />
-        <input v-model="newEmployee.confirmPassword" maxlength="60" type="password" placeholder="Confirmar contraseña" required minlength="8" />
+        <input v-model="newEmployee.city" maxlength="100" placeholder="Ciudad*" required />
+        <input v-model="newEmployee.address" maxlength="255" placeholder="Dirección*" required />
+        <input v-model="newEmployee.postalCode" maxlength="5" @input="validatePostalCode" placeholder="Código postal*" required />
+        
+        <div class="relative w-full">
+            <input
+                v-model="newEmployee.password"
+                :type="showPassword ? 'text' : 'password'"
+                maxlength="60"
+                placeholder="Contraseña*"
+                required minlength="8"
+                class="pr-10"
+            />
+            <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <i :class="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+            </button>
+        </div>
+
+        <div class="relative w-full">
+            <input
+                v-model="newEmployee.confirmPassword"
+                :type="showConfirmPassword ? 'text' : 'password'"
+                maxlength="60"
+                placeholder="Confirmar contraseña*"
+                required minlength="8"
+                class="pr-10"
+            />
+            <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <i :class="showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+            </button>
+        </div>
 
         <div class="actions">
             <AppButton type="submit" :disabled="isLoading">
