@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useSessionStore } from '@/stores/session'
 
-const baseUrl = 'http://localhost:5000/api/sale'
+const baseUrl = 'https://localhost:5000/api/sale'
 
 export async function addSale(sale) {
   const session = useSessionStore()
@@ -34,6 +34,40 @@ export async function addSale(sale) {
     return {
       success: false,
       msg: error.response.data.msg
+    }
+  }
+}
+
+export async function generateCut(from, to) {
+  const session = useSessionStore()
+
+  try {
+    const response = await axios.get(
+      `${baseUrl}/cut`,
+      {
+        params: { from, to },
+        headers: {
+          Authorization: `Bearer ${session.token}`,
+        }
+      }
+    )
+
+    if (response.status === 200) {
+      return {
+        success: true,
+        data: response.data,
+        msg: 'Corte generado exitosamente'
+      }
+    } else {
+      return {
+        success: false,
+        msg: 'No se pudo procesar el corte'
+      }
+    }
+  } catch (error) {
+    return {
+      success: false,
+      msg: error.response?.data?.msg || 'Error de conexión con el servidor'
     }
   }
 }

@@ -19,7 +19,8 @@ const routes = [
     children: [
       {
         path: 'employees',
-        component: Employees
+        component: Employees,
+        meta: { requiresAdmin: true }
       },
       {
         path: 'pos',
@@ -49,16 +50,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const session = useSessionStore()
 
-  if (to.meta.requiresAdmin && !session.isAdmin) {
-    if (session.isLoggedIn) {
-      next('/pos')
-    } else {
-      next('/login')
-    }
-  }
-  else if (to.path !== '/login' && !session.isLoggedIn) {
+  if (to.path !== '/login' && !session.isLoggedIn) {
     next('/login')
-  }
+  } 
+  else if (to.meta.requiresAdmin && !session.isAdmin) {
+    next('/pos')
+  } 
   else {
     next()
   }

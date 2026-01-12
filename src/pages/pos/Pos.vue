@@ -10,6 +10,7 @@
   import SaleSummary from './SaleSummary.vue';
   import { useSessionStore } from '@/stores/session';
   import { addSale } from '@/repositories/SalesRepository';
+  import GenerateCutForm from './GenerateCutForm.vue';
 
   const session = useSessionStore()
   const toast = useToast()
@@ -18,6 +19,12 @@
   const searchResults = ref([])
   const saleTotal = ref(0)
   const productsInStage = ref(new Map())
+
+  const isCutVisible = ref(false)
+
+  function closeCut() {
+    isCutVisible.value = false;
+  }
 
   async function searchProduct() {
     if(searchString.value != '') {
@@ -109,7 +116,7 @@
 </script>
 
 <template>
-  <div class="w-full flex items-center min-h-full">
+  <div class="w-full flex items-center justify-between min-h-full">
 
     <div class="rounded-xl bg-gray-800 overflow-hidden p-3 flex flex-col w-2xs lg:flex-row lg:w-2xl lg:items-center lg:justify-between">
       <AppInputField v-model="searchString" type="text" id="searchBar" name="searchBar" placeholder="Escribe el código o nombre del producto" :required="true"/>
@@ -118,7 +125,16 @@
       </div>
     </div>
 
+    <Button text="Corte de caja"
+      :on-click="() => isCutVisible = true"
+      buttonClass="bg-orange-600 hover:bg-orange-700 text-white"
+      icon-class="pi pi-briefcase"
+    />
   </div>
+
+  <PopUp v-if="isCutVisible" :onClosed="closeCut" container-class="max-w-md">
+    <GenerateCutForm />
+  </PopUp>
 
   <div class="flex flex-row gap-10 w-full h-full mt-10">
     <div class="w-full h-full">

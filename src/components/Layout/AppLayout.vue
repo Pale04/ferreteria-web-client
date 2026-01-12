@@ -26,9 +26,18 @@
     <nav class="mt-8 px-4">
       <div class="space-y-2">
         <TabAppLayout title="Punto de venta" route="/pos" icon-class="pi pi-shopping-cart"/>
-        <TabAppLayout title="Proveedores" route="/providers" icon-class="pi pi-file-check"/>
+        <TabAppLayout
+          v-if="session.isAdmin"
+          title="Proveedores"
+          route="/providers"
+          icon-class="pi pi-file-check"/>
         <TabAppLayout title="Inventario" route="/stock" icon-class="pi pi-warehouse"/>
-        <TabAppLayout title="Empleados" route="/employees" icon-class="pi pi-user"/>
+        <TabAppLayout 
+          v-if="session.isAdmin"
+          title="Empleados" 
+          route="/employees" 
+          icon-class="pi pi-user"
+        />
       </div>
     </nav>
 

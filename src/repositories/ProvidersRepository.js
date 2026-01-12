@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseUrl = 'http://localhost:5000/api/provider'
+const baseUrl = 'https://localhost:5000/api/provider'
 
 export async function addProvider(provider) {
   const token = localStorage.getItem('user_token');
