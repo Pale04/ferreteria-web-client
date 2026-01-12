@@ -10,8 +10,8 @@
 <template>
   <button
   @click.prevent="onClick"
-  :class="`${buttonClass} font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out`">
-    <i :class="`${iconClass} mr-1 text-cordes-accent group-hover:text-white`"></i>
+  :class="`${buttonClass} flex items-center justify-center font-medium py-2 px-4 rounded-lg transition duration-150 ease-in-out`">
+    <i v-if="iconClass != null" :class="`${iconClass} mr-2 text-cordes-accent group-hover:text-white`"></i>
     {{ text }}
   </button>
 </template>

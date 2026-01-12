@@ -109,7 +109,7 @@
       <DataRowAppTable :field="item.active ? 'Activo' : 'Desactivado'"/>
       <DataRowAppTable class="text-sm font-medium" @clicked="showUpdateProviderForm">
         <EditProviderButton text="Editar" :id="item.id" @clicked="showUpdateProviderForm"/>
-        <span class="p-5"></span>
+        <span class="p-3"></span>
         <EditProviderButton :text="item.active ? 'Desactivar' : 'Activar'" :id="item.id" @clicked="changeProviderState"/>
       </DataRowAppTable>
     </tr>

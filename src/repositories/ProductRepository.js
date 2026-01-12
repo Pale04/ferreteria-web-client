@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useSessionStore } from '@/stores/session'
 
-const API_URL = 'https://localhost:5000/api'
+const API_URL = 'http://localhost:5000/api'
 
 export async function registerProduct(payload) {
   const session = useSessionStore()
@@ -71,7 +71,7 @@ export async function getProductsBySearchString(searchString) {
 
   try {
     const response = await axios.get(
-    `${baseUrl}?s=${searchString}`,
+    `${API_URL}/products?s=${searchString}`,
     {
       headers: {
         Authorization: `Bearer ${session.token}`
@@ -84,6 +84,48 @@ export async function getProductsBySearchString(searchString) {
           success: true,
           data: response.data
         };
+      case 204:
+        return {
+          success: true,
+          data: []
+        }
+      default:
+        return {
+          success: false,
+          msg: response.data.msg
+        };
+    }
+  } catch (error) {
+    return {
+      success: false,
+      msg: error.response.data.msg
+    }
+  }
+}
+
+export async function getProductsById(id) {
+  const session = useSessionStore()
+
+  try {
+    const response = await axios.get(
+    `${API_URL}/products/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    })
+
+    switch (response.status) {
+      case 200:
+        return {
+          success: true,
+          data: response.data
+        };
+      case 404:
+        return {
+          success: true,
+          msg: 'Producto encontrado'
+        }
       default:
         return {
           success: false,

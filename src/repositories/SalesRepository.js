@@ -7,7 +7,7 @@ export async function addSale(sale) {
   const session = useSessionStore()
 
   try {
-    const response = await axios.get(
+    const response = await axios.post(
     baseUrl,
     sale,
     {

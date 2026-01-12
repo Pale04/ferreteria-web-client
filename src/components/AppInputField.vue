@@ -22,7 +22,7 @@
     :id="id"
     :name="name"
     :placeholder="placeholder"
-    class="py-2 px-2 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 hover:shadow-sm"
+    class="bg-white p-2 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 hover:shadow-sm"
     :required="required"
   />
 </template>
