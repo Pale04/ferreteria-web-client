@@ -12,7 +12,7 @@
   <div tabindex="-1"
     class="bg-black/50 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 h-full items-center justify-center flex">
 
-    <div :class="`relative pt-5 w-full h-full max-h-9/12 md:h-auto bg-white rounded-lg shadow ${containerClass}`">
+    <div :class="`relative pt-5 w-full h-full max-h-11/12 md:h-auto bg-white rounded-lg shadow ${containerClass}`">
 
       <button type="button"
           class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center popup-close"
