@@ -11,6 +11,7 @@
   import { useSessionStore } from '@/stores/session';
   import { addSale } from '@/repositories/SalesRepository';
   import GenerateCutForm from './GenerateCutForm.vue';
+  import { useRouter } from 'vue-router'
 
   const session = useSessionStore()
   const toast = useToast()
@@ -19,6 +20,8 @@
   const searchResults = ref([])
   const saleTotal = ref(0)
   const productsInStage = ref(new Map())
+
+  const router = useRouter()
 
   const isCutVisible = ref(false)
 
@@ -75,44 +78,55 @@
     }
   }
 
-  async function confirmSale(paymentMethod) {
-    const productsInStageAsIterator = productsInStage.value.values()
+  async function confirmSale(paymentData) {
+  const productsInStageAsIterator = productsInStage.value.values()
 
-    let stageIsValid = true
-    let i = 0
-    while(i < productsInStage.value.size && stageIsValid) {
-      stageIsValid = productsInStageAsIterator.next().value.isValid ?? true
-      i++
-    }
-
-    if (stageIsValid){
-      const saleDetails = []
-      for(const product of productsInStage.value.values()) {
-        saleDetails.push({
-          productId: product.id,
-          productQuantity: product.quantity
-        })
-      }
-
-      const sale = {
-        paymentMethod: paymentMethod,
-        employeeId: session.user.id,
-        saleDetails: saleDetails
-      }
-
-      const result = await addSale(sale)
-
-      if (result.success) {
-        toast.info('La compra se ha realizado exitosamente')
-        productsInStage.value.clear()
-        saleTotal.value = 0
-      } else {
-        toast.warning(result.msg)
-      }
-    } else {
-      toast.warning('Corrija los campos inválidos para proceder con la compra')
-    }
+  let stageIsValid = true
+  let i = 0
+  while (i < productsInStage.value.size && stageIsValid) {
+    stageIsValid = productsInStageAsIterator.next().value.isValid ?? true
+    i++
   }
+
+  if (!stageIsValid) {
+    toast.warning('Corrija los campos inválidos para proceder con la compra')
+    return
+  }
+
+  const saleDetails = []
+  for (const product of productsInStage.value.values()) {
+    saleDetails.push({
+      productId: product.id,
+      productQuantity: product.quantity
+    })
+  }
+
+  const sale = {
+    paymentMethod: paymentData.method,
+    paymentDetails: paymentData.details,
+    employeeId: session.user.id,
+    saleDetails
+  }
+
+  const result = await addSale(sale)
+
+  if (result.success) {
+    productsInStage.value.clear()
+    saleTotal.value = 0
+
+    router.push({
+      name: 'sale-ticket',
+      params: { id: result.data.id },
+      state: {
+        paymentMethod: paymentData.method,
+        paymentDetails: paymentData.details
+      }
+    })
+  } else {
+    toast.warning(result.msg)
+  }
+}
+
 </script>
 
 <template>

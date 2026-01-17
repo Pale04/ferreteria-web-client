@@ -47,7 +47,7 @@ export async function updateProduct(productId, payload) {
 
   try {
     const response = await axios.put(
-      `http://localhost:5000/api/products/${productId}`,
+      `https://localhost:5000/api/products/${productId}`,
       payload,
       {
         headers: {
