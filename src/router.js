@@ -1,11 +1,12 @@
-import { useSessionStore } from "@/stores/session";
-import { createRouter, createWebHistory } from "vue-router";
-import Login from "@/pages/login/index.vue";
-import Employees from "@/pages/employees/Employees.vue";
-import AppLayout from "@/components/Layout/AppLayout.vue";
-import Pos from "@/pages/pos/Pos.vue";
-import Providers from "@/pages/providers/Providers.vue";
-import Stock from "@/pages/stock/Stock.vue";
+import { useSessionStore } from '@/stores/session'
+import { createRouter, createWebHistory } from 'vue-router'
+import Login from '@/pages/login/index.vue'
+import Employees from '@/pages/employees/Employees.vue'
+import AppLayout from '@/components/Layout/AppLayout.vue'
+import Pos from '@/pages/pos/Pos.vue'
+import Providers from '@/pages/providers/Providers.vue'
+import Stock from '@/pages/stock/Stock.vue'
+import SaleTicket from '@/pages/pos/SaleTicket.vue'
 import Purchases from "@/pages/purchases/index.vue";
 
 const routes = [
@@ -38,6 +39,12 @@ const routes = [
       {
         path: "/stock/category/:id",
         component: () => import("@/pages/stock/CategoryProducts.vue"),
+      },
+      {
+        path: 'sale-ticket/:id',
+        name: 'sale-ticket',
+        component: SaleTicket,
+        props: true
       },
       {
         path: "purchases",

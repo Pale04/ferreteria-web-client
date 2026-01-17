@@ -71,3 +71,38 @@ export async function generateCut(from, to) {
     }
   }
 }
+
+export async function getCutDetails(from, to) {
+  const session = useSessionStore()
+
+  const response = await axios.get(
+    `${baseUrl}/cut/details`,
+    {
+      params: { from, to },
+      headers: {
+        Authorization: `Bearer ${session.token}`
+      }
+    }
+  )
+
+  return response.data
+}
+
+export async function getSaleById(id) {
+  const session = useSessionStore()
+
+  try {
+    const response = await axios.get(
+      `${baseUrl}/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session.token}`
+        }
+      }
+    )
+
+    return { success: true, data: response.data }
+  } catch (error) {
+    return { success: false }
+  }
+}
