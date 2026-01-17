@@ -120,53 +120,59 @@ async function confirmPurchase() {
 
 <template>
   <div
-    class="w-full rounded-xl bg-green-800 p-4 flex flex-col gap-4
-          lg:flex-row lg:items-end lg:gap-6"
+    class="w-full bg-green-800 rounded-xl p-4 flex flex-col gap-4
+          lg:flex-row lg:items-center lg:justify-between"
   >
-    <!-- Búsqueda -->
-    <div class="flex-1">
-      <label class="block text-sm font-semibold text-white mb-1">
-        Producto
-      </label>
+    <div class="flex flex-1 gap-3 items-center">
       <AppInputField
         v-model="searchString"
         type="text"
         id="searchBar"
         name="searchBar"
-        placeholder="Código o nombre del producto"
+        placeholder="Escribe el código o nombre del producto"
         :required="true"
+        class="flex-1"
       />
-    </div>
 
-    <div class="w-full lg:w-64">
-      <label class="block text-sm font-semibold text-white mb-1">
-        Proveedor
-      </label>
-      <select
-        v-model="selectedProviderId"
-        class="w-full rounded-lg px-3 py-2 text-sm
-              border border-gray-300 focus:outline-none
-              focus:ring-2 focus:ring-indigo-500"
-      >
-        <option disabled value="">
-          Seleccione un proveedor
-        </option>
-        <option
-          v-for="provider in providers"
-          :key="provider.id"
-          :value="provider.id"
-        >
-          {{ provider.name }}
-        </option>
-      </select>
-    </div>
-
-    <div class="flex-shrink-0">
       <Button
         text="Buscar"
         :on-click="searchProduct"
-        buttonClass="bg-indigo-600 hover:bg-indigo-700 text-white h-[42px]"
+        buttonClass="bg-indigo-600 hover:bg-indigo-700 text-white"
         icon-class="pi pi-search"
+      />
+    </div>
+
+    <!-- Proveedor + Confirmar -->
+    <div class="flex gap-4 items-center">
+      <div class="flex flex-col">
+        <label class="text-sm font-semibold text-white mb-1">
+          Proveedor
+        </label>
+        <select
+          v-model="selectedProviderId"
+          class="rounded-lg px-3 py-2 text-sm
+                border border-gray-300 focus:outline-none
+                focus:ring-2 focus:ring-indigo-500"
+        >
+          <option disabled value="">
+            Seleccione un proveedor
+          </option>
+          <option
+            v-for="provider in providers"
+            :key="provider.id"
+            :value="provider.id"
+          >
+            {{ provider.name }}
+          </option>
+        </select>
+      </div>
+
+      <Button
+        v-if="productsInStage.size > 0"
+        text="Confirmar compra"
+        @click.prevent="confirmPurchase"
+        button-class="bg-indigo-600 hover:bg-indigo-700 text-white"
+        icon-class="pi pi-shopping-cart"
       />
     </div>
   </div>
