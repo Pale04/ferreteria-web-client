@@ -1,55 +1,63 @@
 <script setup>
-  import { useSessionStore } from '@/stores/session';
-  import router from '@/router'
-  import HeaderAppLayout from '@/components/Layout/HeaderAppLayout.vue'
-  import UserInfoAppLayout from '@/components/Layout/UserInfoAppLayout.vue';
-  import TabAppLayout from '@/components/Layout/TabAppLayout.vue';
-  import Button from '@/components/Button.vue';
+import { useSessionStore } from "@/stores/session";
+import router from "@/router";
+import HeaderAppLayout from "@/components/Layout/HeaderAppLayout.vue";
+import UserInfoAppLayout from "@/components/Layout/UserInfoAppLayout.vue";
+import TabAppLayout from "@/components/Layout/TabAppLayout.vue";
+import Button from "@/components/Button.vue";
 
-  const session = useSessionStore()
+const session = useSessionStore();
 
-  function logOut() {
-    session.$patch({
-      isLoggedIn: false
-    })
+function logOut() {
+  session.$patch({
+    isLoggedIn: false,
+  });
 
-    router.push({ path: '/login', replace: true})
-  }
+  router.push({ path: "/login", replace: true });
+}
 </script>
 
 <template>
   <div class="fixed inset-y-0 left-0 w-64 bg-gray-800 shadow-xl z-50">
-
-    <HeaderAppLayout/>
-    <UserInfoAppLayout/>
+    <HeaderAppLayout />
+    <UserInfoAppLayout />
 
     <nav class="mt-8 px-4">
       <div class="space-y-2">
-        <TabAppLayout title="Punto de venta" route="/pos" icon-class="pi pi-shopping-cart"/>
+        <TabAppLayout title="Punto de venta" route="/pos" icon-class="pi pi-shopping-cart" />
         <TabAppLayout
           v-if="session.isAdmin"
           title="Proveedores"
           route="/providers"
-          icon-class="pi pi-file-check"/>
-        <TabAppLayout title="Inventario" route="/stock" icon-class="pi pi-warehouse"/>
-        <TabAppLayout 
+          icon-class="pi pi-file-check"
+        />
+        <TabAppLayout title="Inventario" route="/stock" icon-class="pi pi-warehouse" />
+        <TabAppLayout
           v-if="session.isAdmin"
-          title="Empleados" 
-          route="/employees" 
+          title="Empleados"
+          route="/employees"
           icon-class="pi pi-user"
+        />
+        <TabAppLayout
+          v-if="session.isAdmin"
+          title="Compras"
+          route="/purchases"
+          icon-class="pi pi-receipt"
         />
       </div>
     </nav>
 
     <div class="absolute bottom-4 px-4">
-      <Button text="Cerrar sesión" :on-click="logOut" icon-class="pi pi-sign-out" buttonClass="bg-red-600 hover:bg-red-700 text-white"/>
+      <Button
+        text="Cerrar sesión"
+        :on-click="logOut"
+        icon-class="pi pi-sign-out"
+        buttonClass="bg-red-600 hover:bg-red-700 text-white"
+      />
     </div>
-
   </div>
 
-
   <div class="ml-64">
-
     <header class="bg-white shadow-sm border-b border-gray-200">
       <div class="px-6 py-4">
         <div class="flex items-center justify-between">
@@ -61,8 +69,7 @@
     </header>
 
     <main class="p-6">
-      <router-view/>
+      <router-view />
     </main>
   </div>
-
 </template>
